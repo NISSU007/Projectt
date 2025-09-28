@@ -8,8 +8,8 @@ pygame.display.set_caption("MathDerr")
 # ==============================
 # Screen Settings
 # ==============================
-SCREEN_W = 1000
-SCREEN_H = 600
+SCREEN_W = 1500
+SCREEN_H = 800
 screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
 
 # ==============================
