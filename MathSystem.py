@@ -2,11 +2,20 @@ import random
 import pygame
 import sys
 from pygame.locals import *
-
-# 🟢 เริ่มต้นใช้งาน pygame
 pygame.init()
 
-# 🎨 กำหนดสี (RGB)
+# ==============================
+# ขนาดหน้าจอ
+# ==============================
+SCREEN_W = 1500
+SCREEN_H = 800
+screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+
+
+
+# ==============================
+# สีที่ใช้ในเกม
+# ==============================
 WHITE      = (255, 255, 255)
 YELLOW     = (255, 255, 102)
 GREY       = (211, 211, 211)
@@ -15,37 +24,43 @@ GREEN      = (0, 255, 0)
 LIGHT_GREEN= (153, 255, 204)
 RED        = (255, 0, 0)
 MAIN_RED   = (158, 27, 20)
+CREAM      = (243, 229, 171)
 
-# 🎨 ฟอนต์
-font    = pygame.font.SysFont("Helvetica neue", 40)
+# ==============================
+# ฟอนต์
+# ==============================
+font    = pygame.font.SysFont("Helvetica neue", 80)
+fontinbox    = pygame.font.SysFont("Helvetica neue", 40)
 bigFont = pygame.font.SysFont("Helvetica neue", 80)
 
-# 📝 ข้อความแสดงผล
+# ==============================
+# ข้อความแสดงผล
+# ==============================
 youWin           = bigFont.render("You Win!",       True, LIGHT_GREEN)
 youLose          = bigFont.render("You Lose!",      True, LIGHT_GREEN)
 playAgain        = bigFont.render("Play Again?",    True, LIGHT_GREEN)
-incorrectAnswer  = bigFont.render("Sum is incorrect, Press ENTER", True, RED)
+incorrectAnswer  = bigFont.render("Sum is incorrect, Press ENTER", True, WHITE)
 
 
-# 🔹 ฟังก์ชันสร้างสมการแบบสุ่มตามระดับความยาก
+
+# ==============================
+# ฟังก์ชันสร้างสมการแบบสุ่มตามระดับความยาก
+# ==============================
 def generate_equation(level):
     '''สร้างสมการแบบสุ่มตามระดับความยาก'''
     digits          = "0123456789"
     operators_easy  = "+-"
-    operators_medium = "+-*"
-    operators_hard  = ["+", "-", "*", "/"]
+    operators_medium = "*/"
 
-    # 🔧 กำหนดค่าตามระดับ
+    # กำหนดค่าตามระดับ
     if level == "easy":
         length, n_ops, ops = 8, 1, operators_easy
     elif level == "medium":
         length, n_ops, ops = 10, 2, operators_medium
-    elif level == "hard":
-        length, n_ops, ops = 10, 2, operators_hard
     else:
         raise ValueError("Level must be easy, medium, or hard")
 
-    # 🔄 สุ่มสมการจนกว่าจะ valid
+    # สุ่มสมการจนกว่าจะ valid
     while True:
         # สุ่มตำแหน่งของเครื่องหมาย "="
         eq_pos = random.randint(3, length - 3)
@@ -80,8 +95,9 @@ def generate_equation(level):
         except Exception:
             continue
 
-
-# 🔹 ฟังก์ชันตรวจคำตอบ
+# ==============================
+# ฟังก์ชันตรวจคำตอบ
+# ==============================
 def checkGuess(turns, nerdleSum, userGuess, window):
     '''ตรวจคำตอบและแสดงผลลัพธ์'''
     spacing = 0
@@ -96,47 +112,44 @@ def checkGuess(turns, nerdleSum, userGuess, window):
 
     # วาดกล่องคำตอบ
     for i, ch in enumerate(userGuess):
-        text = font.render(ch, True, BLACK)
+        text = fontinbox.render(ch, True, BLACK)
         pygame.draw.rect(window, guessColourCode[i],
-                         pygame.Rect(400 + spacing, 50 + (turns*80), 50, 50))
-        window.blit(text, (416 + spacing, 60 + (turns*80)))
+                         pygame.Rect(SCREEN_W//2 - 325 + spacing, 50 + (turns*80), 50, 50))
+        window.blit(text, (SCREEN_W//2 - 310 + spacing, 60 + (turns*80)))
         spacing += 80
 
     # ถ้าตัวอักษรทั้งหมดเป็นสีเขียว → ชนะ
     return all(c == GREEN for c in guessColourCode)
 
-
-# 🔹 ฟังก์ชันหลักของเกม
+# ==============================
+# ฟังก์ชันหลักของเกม
+# ==============================
 def start_game(level):
     '''ฟังก์ชันหลักของเกม'''
     while True:  # loop สำหรับ restart เกม
         nerdleSum = generate_equation(level)  # 👈 เปลี่ยน level ได้
         grid_size = len(nerdleSum)
-
         print("Target:", nerdleSum)  # debug ดูคำตอบ
-
-        # ตั้งค่า window
-        SCREEN_W, SCREEN_H = 1500, 800
-        FPS = 60
+        
+        # ตั้งค่าหน้าจอ
+        FPS = 60 
         clock = pygame.time.Clock()
-        window = pygame.display.set_mode((SCREEN_W, SCREEN_H))
-        pygame.display.set_caption("MathDerr")
-
-        window.fill(MAIN_RED)
+        screen.fill(MAIN_RED)
 
         # วาด grid
         for x in range(grid_size):
             for y in range(6):
-                pygame.draw.rect(window, GREY,
-                                 pygame.Rect(400+(x*80), 50+(y*80), 50, 50), 2)
+                pygame.draw.rect(screen, GREY,
+                pygame.Rect(((x*80)+(SCREEN_W//2 - 325)), (y*80)+50, 50, 50), 2)
 
         # ตัวแปรควบคุมเกม
         guess = ""
         turns = 0
         win   = False
         playing = True
+        showincorrect = False
 
-        # 🔄 loop เล่นเกม
+        # loop เล่นเกม
         while playing:
             for event in pygame.event.get():
                 if event.type == QUIT:  # ออกจากเกม
@@ -154,33 +167,41 @@ def start_game(level):
                         elif len(guess) == grid_size and "=" in guess:
                             try:
                                 # split และ eval สมการ
-                                userGuess = guess.split("=")
+                                userGuess = guess.split("=") #ถูก
                                 if eval(userGuess[0]) == float(userGuess[1]):
-                                    win = checkGuess(turns, nerdleSum, guess, window)
+                                    win = checkGuess(turns, nerdleSum, guess, screen)
                                     turns += 1
                                     guess = ""
-                                else:
-                                    window.blit(incorrectAnswer, (60, 450))
-                            except Exception:
-                                window.blit(incorrectAnswer, (60, 450))
+                                    showincorrect = False
+                                else: # ผิด
+                                    guess = ""
+                                    showincorrect = True
+                            except Exception: # ผิด
+                                showincorrect = True
+                                guess = ""
+
 
                     else:  # พิมพ์ตัวอักษร
                         if event.unicode.isprintable() and len(guess) < grid_size:
                             guess += event.unicode.upper()
 
-            # 🖥️ แสดง guess ปัจจุบันด้านล่าง
-            window.fill(BLACK, (300, 520, 800, 200))
-            renderGuess = font.render(guess, True, GREY)
-            window.blit(renderGuess, (400, 600))
+            # แสดง guess ปัจจุบันด้านล่าง
+            pygame.draw.rect(screen, CREAM, ((x*40), (y*110), 900, 150))
+            renderGuess = font.render(guess, True, BLACK)
+            screen.blit(renderGuess, (600, 600))
+
+            # แสดงคำสมการ ERROR
+            if showincorrect == True:
+                screen.blit(incorrectAnswer, (300, 450))
 
             # 🏆 สถานะชนะ/แพ้
             if win:
-                window.blit(youWin, (90, 200))
-                window.blit(playAgain, (60, 300))
+                screen.blit(youWin, (500, 200))
+                screen.blit(playAgain, (500, 300))
 
             if turns == 6 and not win:
-                window.blit(youLose, (90, 200))
-                window.blit(playAgain, (60, 300))
+                screen.blit(youLose, (500, 200))
+                screen.blit(playAgain, (500, 300))
 
             # อัพเดทจอ
             pygame.display.update()
