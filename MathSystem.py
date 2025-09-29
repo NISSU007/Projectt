@@ -26,23 +26,20 @@ youLose          = bigFont.render("You Lose!",      True, LIGHT_GREEN)
 playAgain        = bigFont.render("Play Again?",    True, LIGHT_GREEN)
 incorrectAnswer  = bigFont.render("Sum is incorrect, Press ENTER", True, RED)
 
-
-# 🔹 ฟังก์ชันสร้างสมการแบบสุ่มตามระดับความยาก
+# 🔹 ฟังก์ชันสร้างสมการ
 def generate_equation(level):
     '''สร้างสมการแบบสุ่มตามระดับความยาก'''
     digits          = "0123456789"
-    operators_easy  = "+-*/"
-    operators_hard  = ["+", "-", "*", "/", "**"]
+    operators_easy  = "+-"
+    operators_medium  = "*/"
 
     # 🔧 กำหนดค่าตามระดับ
     if level == "easy":
         length, n_ops, ops = 8, 1, operators_easy
     elif level == "medium":
-        length, n_ops, ops = 10, 2, operators_easy
-    elif level == "hard":
-        length, n_ops, ops = 12, 2, operators_hard
+        length, n_ops, ops = 10, 2, operators_medium
     else:
-        raise ValueError("Level must be easy, medium, or hard")
+        raise ValueError("Level must be easy or medium")
 
     # 🔄 สุ่มสมการจนกว่าจะ valid
     while True:
@@ -72,12 +69,21 @@ def generate_equation(level):
 
             # ✅ ถ้าเป็นสมการที่ถูกต้อง
             if left_val == right_val and right_val != 0:
-                # hard mode ต้องมี ** อยู่บ้าง
-                if level == "hard" and "**" not in left:
-                    continue
                 return "".join(eq)
         except Exception:
             continue
+
+# 🔹 ฟังก์ชันอ่านสมการจากไฟล์ (โหมด Hard)
+def generate_equation_from_file(filename="Equation.txt"):
+    '''อ่านสมการจากไฟล์ แล้วสุ่มเลือก 1 สมการ'''
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            equations = [line.strip() for line in f if line.strip()]
+        if not equations:
+            raise ValueError("ไฟล์ว่าง ไม่มีสมการ")
+        return random.choice(equations)  # เลือกสมการแบบสุ่ม
+    except FileNotFoundError:
+        raise FileNotFoundError(f"ไม่พบไฟล์ {filename}, กรุณาสร้างไฟล์นี้")
 
 
 # 🔹 ฟังก์ชันตรวจคำตอบ
@@ -109,7 +115,10 @@ def checkGuess(turns, nerdleSum, userGuess, window):
 def start_game(level):
     '''ฟังก์ชันหลักของเกม'''
     while True:  # loop สำหรับ restart เกม
-        nerdleSum = generate_equation(level)  # 👈 เปลี่ยน level ได้
+        if level == "hard":
+            nerdleSum = generate_equation_from_file("Equation.txt")  # 👈 ใช้ไฟล์แทน
+        else:
+            nerdleSum = generate_equation(level)  # easy/medium
         grid_size = len(nerdleSum)
 
         print("Target:", nerdleSum)  # debug ดูคำตอบ
