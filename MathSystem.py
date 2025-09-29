@@ -31,16 +31,17 @@ incorrectAnswer  = bigFont.render("Sum is incorrect, Press ENTER", True, RED)
 def generate_equation(level):
     '''สร้างสมการแบบสุ่มตามระดับความยาก'''
     digits          = "0123456789"
-    operators_easy  = "+-*/"
-    operators_hard  = ["+", "-", "*", "/", "**"]
+    operators_easy  = "+-"
+    operators_medium = "+-*"
+    operators_hard  = ["+", "-", "*", "/"]
 
     # 🔧 กำหนดค่าตามระดับ
     if level == "easy":
         length, n_ops, ops = 8, 1, operators_easy
     elif level == "medium":
-        length, n_ops, ops = 10, 2, operators_easy
+        length, n_ops, ops = 10, 2, operators_medium
     elif level == "hard":
-        length, n_ops, ops = 12, 2, operators_hard
+        length, n_ops, ops = 10, 2, operators_hard
     else:
         raise ValueError("Level must be easy, medium, or hard")
 
@@ -115,7 +116,7 @@ def start_game(level):
         print("Target:", nerdleSum)  # debug ดูคำตอบ
 
         # ตั้งค่า window
-        SCREEN_W, SCREEN_H = 1400, 800
+        SCREEN_W, SCREEN_H = 1500, 800
         FPS = 60
         clock = pygame.time.Clock()
         window = pygame.display.set_mode((SCREEN_W, SCREEN_H))
@@ -158,7 +159,6 @@ def start_game(level):
                                     win = checkGuess(turns, nerdleSum, guess, window)
                                     turns += 1
                                     guess = ""
-                                    window.fill(BLACK, (300, 520, 800, 200))
                                 else:
                                     window.blit(incorrectAnswer, (60, 450))
                             except Exception:
@@ -171,7 +171,7 @@ def start_game(level):
             # 🖥️ แสดง guess ปัจจุบันด้านล่าง
             window.fill(BLACK, (300, 520, 800, 200))
             renderGuess = font.render(guess, True, GREY)
-            window.blit(renderGuess, (180, 530))
+            window.blit(renderGuess, (400, 600))
 
             # 🏆 สถานะชนะ/แพ้
             if win:
@@ -185,5 +185,3 @@ def start_game(level):
             # อัพเดทจอ
             pygame.display.update()
             clock.tick(FPS)
-
-start_game("easy")
