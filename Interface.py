@@ -3,11 +3,12 @@ pygame.init()
 pygame.display.set_caption("MathDerr")
 
 # ==============================
-# ขนาดหน้าจอ
+# ตั้งแค่หน้าจอ
 # ==============================
 SCREEN_W = 1500
 SCREEN_H = 800
 screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+
 
 # ==============================
 # สีที่ใช้ในเกม
@@ -35,9 +36,9 @@ start = pygame.transform.scale(start, (80, 20))
 start_rect = start.get_rect(center=((SCREEN_W // 2) - 15, (SCREEN_H // 2) + 202))
 
 # ลูกศร (Arrow)
-arrow_1 = pygame.image.load("arrow.png")
+arrow_1 = pygame.image.load("arrow_1.png")
 arrow_1 = pygame.transform.scale(arrow_1, (30, 30))
-arrow_1_rect = arrow_1.get_rect(center=(551, 502))
+arrow_1_rect = arrow_1.get_rect(center=((SCREEN_W // 2) + 55, (SCREEN_H // 2) + 202))
 
 
 # ==============================
@@ -108,7 +109,7 @@ def window_1():
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # ถ้ากดปุ่ม Start หรือ Arrow → ไปหน้าต่าง 2
-                if start_rect.collidepoint(event.pos) or arrow_1_rect.collidepoint(event.pos):
+                if start_rect.collidepoint(event.pos) or arrow_1_rect.collidepoint(event.pos) or shape_1_rect.collidepoint(event.pos):
                     window_2()
 
         # วาดองค์ประกอบ
@@ -130,18 +131,18 @@ def window_2():
             if event.type == pygame.QUIT:
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # ปุ่ม Back → กลับไปหน้าแรก
+                #กดคำว่า back หรือปุ่มย้อนกลับเพื่อกลับไปหน้าเริ่มเกม
                 if BACK_rect.collidepoint(event.pos) or BACKARROW_rect.collidepoint(event.pos):
                     window_1()
                 # ตรงนี้สามารถเพิ่ม event handler ของ Easy/Medium/Hard ได้
                 ###รอมาเชื่อม##
-                if EASY_rect.collidepoint(event.pos):
+                if EASY_rect.collidepoint(event.pos) or arrow_21_rect.collidepoint(event.pos) or pink_com_rect.collidepoint(event.pos):
                     import system as MS
                     MS.start_game("easy")
-                if MEDIUM_rect.collidepoint(event.pos):
+                if MEDIUM_rect.collidepoint(event.pos) or arrow_22_rect.collidepoint(event.pos) or lbrown_rect.collidepoint(event.pos):
                     import system as MS
                     MS.start_game("medium")
-                if HARD_rect.collidepoint(event.pos):
+                if HARD_rect.collidepoint(event.pos) or arrow_23_rect.collidepoint(event.pos) or dbrown_rect.collidepoint(event.pos):
                     import system as MS
                     MS.start_game("hard")
         # วาดองค์ประกอบ
@@ -167,3 +168,5 @@ def window_2():
 # เริ่มเกม
 # ==============================
 window_1()
+def backtowindow1():
+    window_1() 
