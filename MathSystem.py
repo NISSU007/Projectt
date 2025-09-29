@@ -143,6 +143,7 @@ def start_game(level):
         turns = 0
         win   = False
         playing = True
+        incorrect = False
 
         # 🔄 loop เล่นเกม
         while playing:
@@ -156,7 +157,7 @@ def start_game(level):
                         guess = guess[:-1]
 
                     elif event.key == K_RETURN:  # กด Enter
-                        if win or turns == 6:
+                        if win or turns == 6 or incorrect:  # ถ้าชนะหรือแพ้
                             playing = False  # ออก loop → restart
 
                         elif len(guess) == grid_size and "=" in guess:
@@ -170,8 +171,10 @@ def start_game(level):
                                     window.fill(BLACK, (0, 500, 800, 200))
                                 else:
                                     window.blit(incorrectAnswer, (60, 450))
+                                    incorrect = True
                             except Exception:
                                 window.blit(incorrectAnswer, (60, 450))
+                                incorrect = True
 
                     else:  # พิมพ์ตัวอักษร
                         if event.unicode.isprintable() and len(guess) < grid_size:
