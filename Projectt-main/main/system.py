@@ -24,6 +24,11 @@ RED        = (255, 0, 0)
 MAIN_RED   = (158, 27, 20)
 CREAM      = (243, 229, 171)
 
+# ปุ่ม Back
+BACK = pygame.image.load("backarrow.png")
+BACK = pygame.transform.scale(BACK, (80, 80))
+BACK_rect = BACK.get_rect(center=(150, 100))
+
 # ==============================
 # ฟอนต์
 # ==============================
@@ -167,6 +172,12 @@ def start_game(level):
                     pygame.quit()
                     sys.exit()
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if BACK_rect.collidepoint(event.pos):
+                        import interface as SY
+                        SY.window_2()
+
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_BACKSPACE:  # ลบตัวอักษร
                         guess = guess[:-1]
@@ -213,7 +224,8 @@ def start_game(level):
 
             if turns == 6 and not win:
                 screen.blit(youLose, (500, 715))
-
+            # วาดปุ่ม Back
+            screen.blit(BACK, BACK_rect)
             # อัพเดทจอ
             pygame.display.update()
             clock.tick(FPS)
