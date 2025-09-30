@@ -210,11 +210,9 @@ def start_game(level):
             # 🏆 สถานะชนะ/แพ้
             if win:
                 screen.blit(youWin, (500, 715))
-                screen.blit(youWin, (800, 715))
 
             if turns == 6 and not win:
                 screen.blit(youLose, (500, 715))
-                screen.blit(youLose, (800, 715))
 
             # อัพเดทจอ
             pygame.display.update()
