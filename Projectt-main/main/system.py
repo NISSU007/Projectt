@@ -19,7 +19,7 @@ YELLOW     = (255, 255, 102)
 GREY       = (211, 211, 211)
 BLACK      = (0, 0, 0)
 GREEN      = (0, 255, 0)
-LIGHT_GREEN= (153, 255, 204)
+LIGHT_GREEN= (150, 255, 210)
 RED        = (255, 0, 0)
 MAIN_RED   = (158, 27, 20)
 CREAM      = (243, 229, 171)
@@ -35,8 +35,7 @@ bigFont = pygame.font.SysFont("Helvetica neue", 80)
 # ข้อความแสดงผล
 # ==============================
 youWin           = bigFont.render("You Win!",       True, LIGHT_GREEN)
-youLose          = bigFont.render("You Lose!",      True, LIGHT_GREEN)
-playAgain        = bigFont.render("Play Again?",    True, LIGHT_GREEN)
+youLose          = bigFont.render("You Lose!",      True, WHITE)
 incorrectAnswer  = bigFont.render("Sum is incorrect", True, WHITE)
 
 # ==============================
@@ -210,12 +209,12 @@ def start_game(level):
 
             # 🏆 สถานะชนะ/แพ้
             if win:
-                screen.blit(youWin, (300, 200))
-                screen.blit(playAgain, (500, 300))
+                screen.blit(youWin, (500, 715))
+                screen.blit(youWin, (800, 715))
 
             if turns == 6 and not win:
-                screen.blit(youLose, (500, 200))
-                screen.blit(playAgain, (500, 300))
+                screen.blit(youLose, (500, 715))
+                screen.blit(youLose, (800, 715))
 
             # อัพเดทจอ
             pygame.display.update()
