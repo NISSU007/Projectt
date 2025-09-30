@@ -34,8 +34,8 @@ bigFont = pygame.font.SysFont("Helvetica neue", 80)
 # ==============================
 # ข้อความแสดงผล
 # ==============================
-youWin           = bigFont.render("You Win!",       True, LIGHT_GREEN)
-youLose          = bigFont.render("You Lose!",      True, WHITE)
+youWin           = bigFont.render("You Win! Play again?",       True, LIGHT_GREEN)
+youLose          = bigFont.render("You Lose! Try again?",      True, WHITE)
 incorrectAnswer  = bigFont.render("Sum is incorrect", True, WHITE)
 
 # ==============================
